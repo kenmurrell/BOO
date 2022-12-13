@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BtrfsObjectOpener.Tests", "BtrfsObjectOpener.Tests\BtrfsObjectOpener.Tests.csproj", "{0CD0CDC7-C845-402D-ADAB-BD9781F55042}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BtrfsObjectOpener", "BtrfsObjectOpener\BtrfsObjectOpener.csproj", "{6E89EB95-88D6-44E2-9461-EC968E033EF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CD0CDC7-C845-402D-ADAB-BD9781F55042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD0CDC7-C845-402D-ADAB-BD9781F55042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CD0CDC7-C845-402D-ADAB-BD9781F55042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD0CDC7-C845-402D-ADAB-BD9781F55042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E89EB95-88D6-44E2-9461-EC968E033EF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E89EB95-88D6-44E2-9461-EC968E033EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E89EB95-88D6-44E2-9461-EC968E033EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E89EB95-88D6-44E2-9461-EC968E033EF1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

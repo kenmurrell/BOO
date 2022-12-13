@@ -1,6 +1,6 @@
 using System;
 
-namespace BOO
+namespace BtrfsObjectOpener
 {
     public class Utils
     {
