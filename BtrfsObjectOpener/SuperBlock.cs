@@ -42,7 +42,7 @@ namespace BtrfsObjectOpener
         public ulong root_dir_objectid;
 
         public ulong num_devices;
-        
+
         public uint sectorsize;
 
         public uint nodesize;
@@ -80,7 +80,7 @@ namespace BtrfsObjectOpener
         public byte[] reserved;
 
         public byte[] sys_chunk_array;
-        
+
         public byte[] super_roots;
 
         public byte[] unused;
@@ -105,7 +105,7 @@ namespace BtrfsObjectOpener
                 return 0;
             }
             Utils.CopyArray(data, offset + 0x0, csum, 0, csum.Length);
-            Utils.CopyArray(data, offset + 0x20, fsid, 0, csum.Length);
+            Utils.CopyArray(data, offset + 0x20, fsid, 0, fsid.Length);
 
             bytenr = BitConverter.ToUInt64(data, offset + 0x30);
             flags = BitConverter.ToUInt64(data, offset + 0x38);
@@ -119,7 +119,7 @@ namespace BtrfsObjectOpener
             bytes_used = BitConverter.ToUInt64(data, offset + 0x78);
             root_dir_objectid = BitConverter.ToUInt64(data, offset + 0x80);
             num_devices = BitConverter.ToUInt64(data, offset + 0x88);
-        
+
             sectorsize = BitConverter.ToUInt32(data, offset + 0x90);
             nodesize = BitConverter.ToUInt32(data, offset + 0x94);
             unused_leafsize = BitConverter.ToUInt32(data, offset + 0x98);
@@ -151,5 +151,5 @@ namespace BtrfsObjectOpener
         }
     }
 }
-        
+
 
