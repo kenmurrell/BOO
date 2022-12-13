@@ -1,6 +1,6 @@
 using System;
 
-namespace BOO
+namespace BtrfsObjectOpener
 {
     // Reference: https://btrfs.wiki.kernel.org/index.php/On-disk_Format#Header
     public class InodeHeader : DiskObject
