@@ -3,7 +3,8 @@ using System;
 namespace BtrfsObjectOpener
 {
     // Reference: https://btrfs.wiki.kernel.org/index.php/On-disk_Format#Header
-    public class InodeHeader : DiskObject
+    // Corresponds to data type 'btrfs_header'
+    public class BtrfsHeader : DiskObject
     {
         public int Size => 0x65;
 
@@ -37,7 +38,7 @@ namespace BtrfsObjectOpener
         // Level (0 for leaf nodes)
         public byte level;
 
-        public InodeHeader()
+        public BtrfsHeader()
         {
             csum = new byte[0x20];
             fsid = new byte[0x10];
