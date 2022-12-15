@@ -143,7 +143,7 @@ namespace BtrfsObjectOpener
             uuid_tree_generation = BitConverter.ToUInt64(data, offset + 0x223);
 
             Utils.CopyArray(data, offset + 0x23b, reserved, 0, reserved.Length);
-            Utils.CopyArray(data, offset + 0x32b, super_roots, 0, super_roots.Length);
+            Utils.CopyArray(data, offset + 0x32b, sys_chunk_array, 0, sys_chunk_array.Length);
             Utils.CopyArray(data, offset + 0xb2b, super_roots, 0, super_roots.Length);
             Utils.CopyArray(data, offset + 0xdcb, unused, 0, unused.Length);
 
