@@ -14,11 +14,6 @@ namespace BtrfsObjectOpener
         // length of the name, following this item
         public ushort name_len;
 
-        public BtrfsInodeRef()
-        {
-
-        }
-
         public int ReadFrom(byte[] data, int offset)
         {
             if(Size > data.Length - offset)
