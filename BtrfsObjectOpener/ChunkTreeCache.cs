@@ -9,7 +9,15 @@ public class ChunkTreeCache
     private List<(ChunkKey, ChunkValue)> cache = new();
     
     public void Insert(ChunkKey key, ChunkValue value) {
-        cache.Add((key, value));
+        if (!Exists(key))
+        {
+            cache.Add((key, value));
+        }
+    }
+
+    private bool Exists(ChunkKey key)
+    {
+        return cache.Exists(x => x.Item1.start == key.start);
     }
 
     public ulong? GetPhysicalOffset(ulong logical)
@@ -23,6 +31,19 @@ public class ChunkTreeCache
         }
 
         return null;
+    }
+
+    public (ChunkKey, ChunkValue)? GetMapping(ulong logical)
+    {
+        foreach (var (k, v) in cache)
+        {
+            if (logical >= k.start && logical < k.start + k.size)
+            {
+                return (k, v);
+            }
+        }
+
+        return null; 
     }
 
     public static ChunkTreeCache? Bootstrap(SuperBlock superBlock)
