@@ -5,7 +5,7 @@ namespace BtrfsObjectOpener
     // Reference: https://btrfs.wiki.kernel.org/index.php/Data_Structures#btrfs_inode_item
     public class BtrfsInodeItem : DiskObject
     {
-        public int Size => 0x15A;
+        public int Size => 160;
 
         // Generation
         public ulong generation;
@@ -63,10 +63,10 @@ namespace BtrfsObjectOpener
         public BtrfsInodeItem()
         {
             reserved = new byte[4 * 8];
-            atime = new byte[0x12];
-            ctime = new byte[0x12];
-            mtime = new byte[0x12];
-            otime = new byte[0x12];
+            atime = new byte[12];
+            ctime = new byte[12];
+            mtime = new byte[12];
+            otime = new byte[12];
         }
 
         public int ReadFrom(byte[] data, int offset)
@@ -77,17 +77,17 @@ namespace BtrfsObjectOpener
             }
 
             generation = BitConverter.ToUInt64(data, offset);
-            transid = BitConverter.ToUInt64(data, offset + 0x08);
-            size = BitConverter.ToUInt64(data, offset + 0x16);
-            nbytes = BitConverter.ToUInt64(data, offset + 0x24);
-            block_group = BitConverter.ToUInt64(data, offset + 0x32);
-            nlink = BitConverter.ToUInt32(data, offset + 0x40);
-            uid = BitConverter.ToUInt32(data, offset + 0x44);
-            gid = BitConverter.ToUInt32(data, offset + 0x48);
-            mode = BitConverter.ToUInt32(data, offset + 0x52);
-            rdev = BitConverter.ToUInt64(data, offset + 0x56);
-            flags = BitConverter.ToUInt64(data, offset + 0x64);
-            sequence = BitConverter.ToUInt64(data, offset + 0x72);
+            transid = BitConverter.ToUInt64(data, offset +8);
+            size = BitConverter.ToUInt64(data, offset + 16);
+            nbytes = BitConverter.ToUInt64(data, offset + 24);
+            block_group = BitConverter.ToUInt64(data, offset + 32);
+            nlink = BitConverter.ToUInt32(data, offset + 40);
+            uid = BitConverter.ToUInt32(data, offset + 44);
+            gid = BitConverter.ToUInt32(data, offset + 48);
+            mode = BitConverter.ToUInt32(data, offset + 52);
+            rdev = BitConverter.ToUInt64(data, offset + 56);
+            flags = BitConverter.ToUInt64(data, offset + 64);
+            sequence = BitConverter.ToUInt64(data, offset + 72);
             Utils.CopyArray(data, offset + 0x80, reserved, 0, reserved.Length);
             Utils.CopyArray(data, offset + 0x112, atime, 0, atime.Length);
             Utils.CopyArray(data, offset + 0x124, ctime, 0, ctime.Length);
