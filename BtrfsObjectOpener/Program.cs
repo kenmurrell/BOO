@@ -48,7 +48,7 @@ namespace BtrfsObjectOpener
 
             return items;
         }
-        
+
         private BtrfsKeyPtr[] ParseNode(BtrfsHeader header, byte[] buffer)
         {
             var items = new BtrfsKeyPtr[header.nitems];
@@ -71,7 +71,7 @@ namespace BtrfsObjectOpener
 
             var buffer = new byte[size];
             ReadAtOffset(buffer, physical!.Value);
-            
+
             return buffer;
         }
 
@@ -93,7 +93,7 @@ namespace BtrfsObjectOpener
 
                     var chunk = new BtrfsChunkItem();
                     chunk.ReadFrom(root, (int)(header.Size + item.offset));
-                    
+
                     chunkTreeCache.Insert(new ChunkKey(item.key.offset, chunk.chunkSize), new ChunkValue(chunk.stripes[0].offset));
                 }
             }
@@ -108,6 +108,51 @@ namespace BtrfsObjectOpener
                     ReadChunkTree(nodes, chunkTreeCache, superBlock);
                 }
             }
+        }
+
+        private byte[] ReadRootTreeRoot(ChunkTreeCache chunkTreeCache, SuperBlock superBlock)
+        {
+            var root_tree_root_size = chunkTreeCache.GetMapping(superBlock.root)!.Value.Item1.size;
+            var root_tree_root_physical_address = chunkTreeCache.GetPhysicalOffset(superBlock.root);
+
+            var buffer = new byte[root_tree_root_size];
+            ReadAtOffset(buffer, root_tree_root_physical_address!.Value);
+
+            return buffer;
+        }
+
+        private byte[] ReadFsTreeRoot(byte[] root, ChunkTreeCache chunkTreeCache, SuperBlock superBlock)
+        {
+            var header = new BtrfsHeader();
+            header.ReadFrom(root, 0);
+
+            if (header.level != 0)
+            {
+                throw new ArgumentException("Root tree root is not a leaf node");
+            }
+
+            var items = ParseLeaf(header, root);
+            foreach (var item in items.Reverse())
+            {
+                if (item.key.objectid != BtrfsRootItem.BTRFS_FS_TREE_OBJECTID ||
+                    item.key.type != BtrfsRootItem.BTRFS_ROOT_ITEM_KEY)
+                {
+                    continue;
+                }
+
+                var btrfsRootItem = new BtrfsRootItem();
+                btrfsRootItem.ReadFrom(root, (int)(header.Size + item.offset));
+
+                var fs_tree_root_size = chunkTreeCache.GetMapping(btrfsRootItem.bytenr)!.Value.Item1.size;
+                var fs_tree_root_physical_address = chunkTreeCache.GetPhysicalOffset(btrfsRootItem.bytenr);
+
+                var buffer = new byte[fs_tree_root_size];
+                ReadAtOffset(buffer, fs_tree_root_physical_address!.Value);
+
+                return buffer;
+            }
+
+            throw new ArgumentException("Failed to parse FR tree root");
         }
     }
 }
