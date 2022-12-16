@@ -12,7 +12,6 @@ public class ChunkTreeCache
         if (!Exists(key))
         {
             cache.Add((key, value));
-            Console.WriteLine(key.start);
         }
     }
 
@@ -69,9 +68,6 @@ public class ChunkTreeCache
             {
                 Console.WriteLine("Stripe count can't be zero");
                 return null;
-            } if (chunk.stripeCount > 1)
-            {
-                Console.WriteLine($"Warning: {chunk.stripeCount} stripes detected, but only using the first");
             }
 
             var stripe = chunk.stripes.First();
