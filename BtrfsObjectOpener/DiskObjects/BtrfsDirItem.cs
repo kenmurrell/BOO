@@ -4,6 +4,8 @@
 /// Reference: https://btrfs.wiki.kernel.org/index.php/Data_Structures#btrfs_dir_item
 public class BtrfsDirItem : DiskObject
 {
+    public const ulong Key = 84;
+    
     public int Size => 30;
 
     public BtrfsDiskKey location = new BtrfsDiskKey();
@@ -27,7 +29,7 @@ public class BtrfsDirItem : DiskObject
         location.ReadFrom(data, offset);
         transid = BitConverter.ToUInt64(data, offset + 17);
         data_len = BitConverter.ToUInt16(data, offset + 25);
-        name_len = BitConverter.ToUInt16(data, offset + 25);
+        name_len = BitConverter.ToUInt16(data, offset + 27);
         type = data[offset + 29];
             
         return Size;

@@ -10,8 +10,8 @@ namespace BtrfsObjectOpener
             var stream = new BufferedStream(new FileStream(fsImagePath, FileMode.Open, FileAccess.Read));
             var filesystem = new BtrfsFileSystem(stream);
 
-            // TODO...
-            // filesystem.PrintAllFiles()
+            Console.WriteLine("Found these files:");
+            filesystem.PrintAllFiles();
         }
     }
 }

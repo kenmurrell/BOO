@@ -6,7 +6,7 @@ namespace BtrfsObjectOpener
     // Corresponds to btrfs_root_item
     public class BtrfsRootItem : DiskObject
     {
-        public const ulong BTRFS_FS_TREE_OBJECTID = 228;
+        public const ulong BTRFS_FS_TREE_OBJECTID = 5;
         public const ulong BTRFS_ROOT_ITEM_KEY  = 132;
 
         public int Size => 438;
