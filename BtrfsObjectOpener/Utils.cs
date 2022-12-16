@@ -27,5 +27,41 @@ namespace BtrfsObjectOpener
             }
             return length;
         }
+
+        public static void ReadAtOffset(Stream stream, byte[] buffer, ulong offset)
+        {
+            stream.Seek((long)offset, 0);
+            stream.Read(buffer, 0, buffer.Length);
+        }
+
+        public static BtrfsItem[] ParseLeaf(BtrfsHeader header, byte[] buffer)
+        {
+            var items = new BtrfsItem[header.nitems];
+            var offset = header.Size;
+            for (int i = 0; i < header.nitems; i++)
+            {
+                var item = new BtrfsItem();
+                item.ReadFrom(buffer, offset);
+                offset += item.Size;
+                items[i] = item;
+            }
+
+            return items;
+        }
+
+        public static BtrfsKeyPtr[] ParseNode(BtrfsHeader header, byte[] buffer)
+        {
+            var items = new BtrfsKeyPtr[header.nitems];
+            var offset = header.Size;
+            for (int i = 0; i < header.nitems; i++)
+            {
+                var item = new BtrfsKeyPtr();
+                item.ReadFrom(buffer, offset);
+                offset += item.Size;
+                items[i] = item;
+            }
+
+            return items;
+        }
     }
 }

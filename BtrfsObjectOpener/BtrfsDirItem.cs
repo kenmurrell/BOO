@@ -6,7 +6,7 @@ public class BtrfsDirItem : DiskObject
 {
     public int Size => 30;
 
-    public BtrfsDiskKey location;
+    public BtrfsDiskKey location = new BtrfsDiskKey();
 
     public ulong transid;
 
@@ -24,7 +24,6 @@ public class BtrfsDirItem : DiskObject
             return 0;
         }
 
-        location = new BtrfsDiskKey();
         location.ReadFrom(data, offset);
         transid = BitConverter.ToUInt64(data, offset + 17);
         data_len = BitConverter.ToUInt16(data, offset + 25);

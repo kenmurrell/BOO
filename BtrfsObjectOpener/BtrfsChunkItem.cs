@@ -37,7 +37,7 @@ public class BtrfsChunkItem : DiskObject
     public ushort subStripe;
     
     /// Contained stripes 
-    public BtrfsStripe[] stripes;
+    public BtrfsStripe[] stripes = new BtrfsStripe[0];
 
     
     public int ReadFrom(byte[] data, int offset)

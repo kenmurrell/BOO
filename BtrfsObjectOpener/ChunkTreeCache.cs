@@ -12,6 +12,7 @@ public class ChunkTreeCache
         if (!Exists(key))
         {
             cache.Add((key, value));
+            Console.WriteLine(key.start);
         }
     }
 
@@ -46,17 +47,15 @@ public class ChunkTreeCache
         return null; 
     }
 
-    public static ChunkTreeCache? Bootstrap(SuperBlock superBlock)
+    public static ChunkTreeCache? Bootstrap(byte[] sys_chunk_array,  uint sys_chunk_array_size)
     {
-        var arraySize = superBlock.sys_chunk_array_size;
         var offset = 0;
         var cache = new ChunkTreeCache();
-        var sys_array = superBlock.sys_chunk_array;
         
-        while (offset < arraySize)
+        while (offset < sys_chunk_array_size)
         {
             var key = new BtrfsDiskKey();
-            key.ReadFrom(sys_array, offset);
+            key.ReadFrom(sys_chunk_array, offset);
             if (key.type != BtrfsChunkItem.Key)
             {
                 Console.WriteLine($"Invalid item of type {key.type} inside sys_array at offset {offset}");
@@ -65,7 +64,7 @@ public class ChunkTreeCache
             offset += key.Size;
 
             var chunk = new BtrfsChunkItem();
-            chunk.ReadFrom(sys_array, offset);
+            chunk.ReadFrom(sys_chunk_array, offset);
             if (chunk.stripeCount == 0)
             {
                 Console.WriteLine("Stripe count can't be zero");
