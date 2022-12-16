@@ -6,6 +6,8 @@ namespace BtrfsObjectOpener
     // Corresponds to data type 'btrfs_inode_ref'
     public class BtrfsInodeRef : DiskObject
     {
+        public const ulong Key = 12;
+        
         public int Size => 10;
 
         // Index of the inode this item's referencing in the directory

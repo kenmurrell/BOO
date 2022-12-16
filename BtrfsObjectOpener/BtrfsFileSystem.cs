@@ -74,7 +74,51 @@ namespace BtrfsObjectOpener
             throw new ArgumentException("Failed to parse FR tree root");
         }
 
-        private void WalkFsTree(byte[] node)
+        private (BtrfsDiskKey, BtrfsInodeRef, byte[])? GetInodeRef(ulong inode, byte[] node)
+        {
+            var header = new BtrfsHeader();
+            header.ReadFrom(node, 0);
+
+            if (header.level == 0)
+            {
+                var items = Utils.ParseLeaf(header, node);
+                foreach (var item in items)
+                {
+                    if (item.key.type != BtrfsInodeRef.Key)
+                    {
+                        continue;
+                    }
+
+                    if (item.key.objectid == inode)
+                    {
+                        var inodeRef = new BtrfsInodeRef();
+                        inodeRef.ReadFrom(node, (int)(header.Size + item.offset));
+
+                        var payload = node[(int)(header.Size + item.offset + inodeRef.Size)..(int)(header.Size + item.offset + inodeRef.Size + inodeRef.name_len)];
+
+                        return (item.key, inodeRef, payload);
+                    }
+                }
+            }
+            else {
+                var pointers = Utils.ParseNode(header, node);
+                foreach (var ptr in pointers)
+                {
+                    var physical = ChunkTreeCache.GetPhysicalOffset(ptr.block_number)!.Value;
+                    var nodes = new byte[_superBlock.nodesize];
+                    Utils.ReadAtOffset(_stream, nodes, physical);
+                    var result = GetInodeRef(inode, nodes);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private void WalkFsTree(byte[] node, byte[] rootFSNode)
         {
             var header = new BtrfsHeader();
             header.ReadFrom(node, 0);
@@ -98,7 +142,27 @@ namespace BtrfsObjectOpener
                     }
 
                     var name = System.Text.Encoding.UTF8.GetString(node, (int)(header.Size + item.offset + dirItem.Size), dirItem.name_len);
-                    Console.WriteLine(name);
+
+                    var path = "";
+
+                    var currentInodeNr = item.key.objectid;
+
+                    while (true)
+                    {
+                        var result = GetInodeRef(currentInodeNr, rootFSNode)!.Value;
+
+                        if (result.Item1.offset == currentInodeNr)
+                        {
+                            path = path.Insert(0,"/");
+                            break;
+                        }
+
+                        path = path.Insert(0, System.Text.Encoding.UTF8.GetString(result.Item3) + "/");
+
+                        currentInodeNr = result.Item1.offset;
+                    }
+                    
+                    Console.WriteLine($"{path}{name}");
                 }
             }
             else {
@@ -108,7 +172,7 @@ namespace BtrfsObjectOpener
                     var physical = ChunkTreeCache.GetPhysicalOffset(ptr.block_number)!.Value;
                     var nodes = new byte[_superBlock.nodesize];
                     Utils.ReadAtOffset(_stream, nodes, physical);
-                    WalkFsTree(nodes);
+                    WalkFsTree(nodes, rootFSNode);
                 }
             }
         }
@@ -116,7 +180,7 @@ namespace BtrfsObjectOpener
         public void PrintAllFiles()
         {
             var root = ReadFsTreeRoot();
-            WalkFsTree(root);
+            WalkFsTree(root, root);
         }
     }
 }
